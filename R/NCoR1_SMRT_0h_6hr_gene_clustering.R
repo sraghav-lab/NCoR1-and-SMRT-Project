@@ -72,7 +72,7 @@ dev.off()
 library(reshape2)
 exp_file <- read.csv("results/NCoR1_SMRT_rld_rep_merged.tsv",sep="\t",header = T) %>% rownames_to_column("Gene")
 head(exp_file)
-pdf("Figures/NCoR1_SMRT_0_all_DE_genes_rld.pdf",height = 5,width = 7)
+pdf("Figures/NCoR1_SMRT_0_6hr_DE_genes_rld.pdf",height = 5,width = 7)
 for (i in sort(unique(NCoR1_SMRT_m.kmeans$Clus))){
   print(i)
   

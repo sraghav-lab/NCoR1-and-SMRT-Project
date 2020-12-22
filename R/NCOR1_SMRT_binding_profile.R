@@ -124,7 +124,7 @@ dev.off()
 motifs = read.csv("data/Enriched_motifs_NCoR1_SMRT_diff_peaks.txt",sep = "\t",header = T)
 motifs_melt = melt(motifs)
 motifs_melt$Category =factor(motifs_melt$Category)
-motifs_melt$variable =factor(motifs_melt$variable,levels = resetwd("/home/imgsb/Gyan/NCOR1/NCoR1_SMRT_analysis/tag_dir/peak_file/diff_peaks")v(c("PU.1","RUNX","NFkB","Jun.Fos.Fra1","Stat3","IRF4","IRF8")))
+motifs_melt$variable =factor(motifs_melt$variable,levels = c("PU.1","RUNX","NFkB","Jun.Fos.Fra1","Stat3","IRF4","IRF8"))
 my_pal <- colorRampPalette(brewer.pal(11, "OrRd"))(25)
 pdf("Figures/NCoR1_SMRT_Enriched_Motifs_.pdf",height = 7,width = 7)
 ggplot(motifs_melt,aes(x=variable,y=Category))+
@@ -140,3 +140,33 @@ ggplot(motifs_melt,aes(x=variable,y=Category))+
 
 dev.off()
 #################################################################################################################
+# Box plot of NCoR1 and SMRT binding in 0hr and 6hr CpG stimulation
+binding_files =  list.files(path = "data","*_unique_peaks.annotation",full.names = TRUE)
+binding_files
+my_comparisons <- list( c("S_0hr", "S_6hr"), c("N_0hr","N_6hr"),c("S_6hr","N_6hr"))
+pdf("Figures/NCoR1_SMRT_0hr_6hr_CpG_binding.pdf",height = 5,width = 5.5)
+for (i in c(1:length(binding_files))){
+  title = gsub("_unique_peaks.annotation","",basename(binding_files[i]))
+  tss <- read.csv(binding_files[i],header = T,sep="\t")[,c(20,21,22,23)]
+  colnames(tss) <- c("S_0hr","S_6hr","N_0hr","N_6hr")
+  tss_melt <- melt(tss)
+  head(tss_melt)
+  tss_melt$group <- gsub("_[0-9]hr","",tss_melt$variable)
+  tss_melt$group <- factor(tss_melt$group,levels = c("S","N"),labels = c("SMRT","NCoR1"))
+  tss_melt$Time <- gsub(".*_","",tss_melt$variable)
+  tss_melt$Time <- factor(tss_melt$Time,levels = c("0hr","6hr"))
+  #png(paste0(title,"_unique_peaks.png"),width = 16,height = 12,units = "cm",res=400)
+  p2 <- ggplot(tss_melt,aes(x=variable,y=log2(value+1)))+
+          geom_boxplot(width=0.5)+
+          gg_theme +
+          ggtitle(title) +
+          geom_boxplot(position="dodge",aes(color=variable))+
+          scale_color_manual(values = c("#058983","#058983","#DEB132","#DEB132"))+
+          ylab("Log(Normalized Tag count)")+
+          xlab("")+
+          stat_summary(fun.y=median, geom="line", aes(group=1), lwd=1,linetype=2)+
+          stat_compare_means(comparisons = my_comparisons,tip.length=0.01,label = "p.format",
+                       y_position = 7,method = "wilcox",paired = FALSE,)
+  print(p2)
+}
+dev.off()

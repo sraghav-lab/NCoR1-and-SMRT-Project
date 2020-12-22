@@ -62,7 +62,7 @@ rld  <- rlogTransformation(dds, blind=TRUE)
 write.table(as.data.frame(assay(rld)),file="results/SMRT_all_condition_rld.txt",sep="\t",quote = FALSE)
 
 ######################## PCA #########################################################################
-col <- read.csv("results/SMRT_all_condition_rld.txt",header = T,sep = "\t")
+col <- read.csv("results/SMRT_all_condition_rld.txt",header = T,sep = "\t") %>% filter(rowSums(.[,]) >1)
 pca_data=prcomp(t(col[,c(1:ncol(col))]), center=TRUE, scale=TRUE)
 pca_data_perc=round(100*pca_data$sdev^2/sum(pca_data$sdev^2),1)
 plot(pca_data, type = "l")
@@ -73,7 +73,7 @@ pca_plt <- ggplot(df_pca_data, aes(PC1,PC2,colour =sample,label=sample))+
   geom_point(size=3)+
   geom_text_repel(
     data          = df_pca_data,
-    size          = 7,
+    size          = 4,
     #angle         = 45,
     #fill = df_pca_data$sample,
     #arrow = arrow(length = unit(0.01, "npc"), type = "closed", ends = "first"),
