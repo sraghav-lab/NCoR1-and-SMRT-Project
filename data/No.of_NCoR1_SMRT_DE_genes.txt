@@ -1,0 +1,5 @@
+Sample	Up	Down
+NCoR1_Uns	475	-392
+SMRT_Uns	771	-612
+NCoR1_CpG	1268	-537
+SMRT_CpG	854	-757
