@@ -28,13 +28,17 @@ vst <- vst(dds, blind=FALSE)
 plt <- plotPCA(vst, intgroup=c("grp","cnd","batch"),returnData=TRUE)
 percentVar <- round(100 * attr(plt, "percentVar"))
 colnames(plt)[c(4,5,6)] = c("Group","Stimulation","Batch")
+plt$grp = c(rep("Control",8),rep("SMRT_KD",4),rep("NCoR1_KD",4))
 ########################################################################################################
 pdf("Figures/NCoR1_SMRT_sample_PCA.pdf",width = 8,height = 5)
-ggplot(plt, aes(PC1, PC2, shape=Batch, color=Group)) + geom_point(size=5) +
+ggplot(plt, aes(PC1, PC2, color=Group,shape=Batch)) + 
+  geom_point(size=8) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-  geom_mark_ellipse(aes(fill = Stimulation))+
-  gg_theme
+  scale_color_manual(values = c("grey","#058983","#DEB132"))+
+  #geom_mark_ellipse(aes(fill = Stimulation))+
+  gg_theme+
+  annotate("rect", xmin=c(-44,21), xmax=c(-25,55), ymin=c(-20,-20) , ymax=c(20,20), alpha=0,size=1, color=c("blue","red"))
 dev.off()
 ######################################################################################################
 #normalized count
