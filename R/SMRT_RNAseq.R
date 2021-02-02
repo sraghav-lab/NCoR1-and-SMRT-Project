@@ -58,9 +58,17 @@ do.call(gridExtra::grid.arrange,c(SMRT.volcano.plot.list,ncol=3))
 dev.off()
 ################################################################################################################################
 
-rld  <- rlogTransformation(dds, blind=TRUE)
+rld  <- rlogTransformation(dds, blind=TRUE) %>% assay() %>% as.data.frame()
 write.table(as.data.frame(assay(rld)),file="results/SMRT_all_condition_rld.txt",sep="\t",quote = FALSE)
 
+normalized_count = as.data.frame(counts(dds, normalized=TRUE))
+t = normalized_count[c("Ncor1","Ncor2","Stat3","Nr4a1","Nr4a2","Nr4a3","Mtor"),] %>% select(c(1:6)) %>% t() %>% cor(.)
+col <- colorRampPalette(c("blue","white","red"))
+corrplot(t, method="color", col=col(200),  
+                      order="hclust", type="upper",
+                     addCoef.col = "black", # Add coefficient of correlation
+                     tl.col="black", tl.srt=45, #Text label color and rotation
+                    diag=FALSE)
 ######################## PCA #########################################################################
 col <- read.csv("results/SMRT_all_condition_rld.txt",header = T,sep = "\t") %>% filter(rowSums(.[,]) >1)
 pca_data=prcomp(t(col[,c(1:ncol(col))]), center=TRUE, scale=TRUE)
