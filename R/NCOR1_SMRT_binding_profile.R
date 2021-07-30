@@ -17,7 +17,7 @@ plotAnnoBar(peakAnnoList)+gg_theme
 dev.off()
 ####################################################################################################################
 #Annotate NCoR1 and SMRT differential peaks
-files =  list.files(path = "data/","*_unique_peaks.bed$",full.names = TRUE)
+files =  list.files(path = "/home/imgsb/Gyan/NCOR1/NCoR1_SMRT_analysis/tag_dir/peak_file/diff_peaks/","*_unique_peaks.bed.bed$",full.names = TRUE)
 files = files[c(4,1,3,2,7,5,6)]
 file_name =  list.files(path = "data","*_unique_peaks.bed$")
 file_name = gsub("_unique_peaks.bed","",file_name)
@@ -33,6 +33,12 @@ peakAnnoList <- lapply(files, annotatePeak,
 diff_NCoR1.SMRT.annotation.df = lapply(peakAnnoList, function(i) as.data.frame(i)) %>%
                                     do.call(rbind, .) %>% 
                                     mutate(Clusters= gsub("\\..*","",rownames(.),""))
+
+diff_NCoR1.SMRT.annotation.df.list = diff_NCoR1.SMRT.annotation.df  %>% dplyr::select(c(17,19)) %>% unique() 
+diff_NCoR1.SMRT.annotation.df.list = split(diff_NCoR1.SMRT.annotation.df.list$SYMBOL,diff_NCoR1.SMRT.annotation.df.list$Clusters)
+
+diff_NCoR1.SMRT.annotation.df.list.pp = diff_NCoR1.SMRT.annotation.df %>% filter(distanceToTSS <= 1000 & distanceToTSS >=-1000) %>% dplyr::select(c(17,19)) %>% unique() 
+diff_NCoR1.SMRT.annotation.df.list.pp = split(diff_NCoR1.SMRT.annotation.df.list.pp$SYMBOL,diff_NCoR1.SMRT.annotation.df.list.pp$Clusters)
 #####################################################################################################################
 #Extract number of features 
 annotation = function(x){
@@ -170,3 +176,7 @@ for (i in c(1:length(binding_files))){
   print(p2)
 }
 dev.off()
+
+
+Emp_DE.list$EC_vs_EU_up[Emp_DE.list$EC_vs_EU_up %in% diff_NCoR1.SMRT.annotation.df.list.pp$SMRT_CpG]
+SMRT_DE.list$SC_vs_EC.6_down[SMRT_DE.list$SC_vs_EC.6_down %in% diff_NCoR1.SMRT.annotation.df.list.pp$SMRT_Uns]

@@ -20,6 +20,7 @@ m.kmeans <- m.kmeans %>%
 write.table(m.kmeans[,c(1:4,6)],file = "results/NCoR1_SMRT_0_6_DE_genes_cluster.txt",sep = "\t",quote = FALSE)
 ############################################################################################################
 NCoR1_SMRT_m.kmeans = read.csv("results/NCoR1_SMRT_0_6_DE_genes_cluster.txt",sep = "\t",header = T,row.names = 1)
+NCoR1_SMRT_m.kmeans.cluster.list = split(rownames(NCoR1_SMRT_m.kmeans),NCoR1_SMRT_m.kmeans$Clus)
 split <- factor(NCoR1_SMRT_m.kmeans[,5])
 p2 <- Heatmap(NCoR1_SMRT_m.kmeans[,c(1,2,3,4)],km = 1,
               name="log2(FC)",

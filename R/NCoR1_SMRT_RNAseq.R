@@ -78,6 +78,8 @@ merge_rep= function(col1){
 NCoR1_SMRT_rld_rep_merged <- merge_rep(rld)
 write.table(NCoR1_SMRT_rld_rep_merged,file="results/NCoR1_SMRT_rld_rep_merged.tsv",sep="\t",quote = FALSE)
 
+
+NCoR1_SMRT_rld_rep_merged.scaled <- scale(NCoR1_SMRT_rld_rep_merged,center = TRUE) %>% as.data.frame()
 #######################################################################################################
 write.table(as.data.frame(assay(vst)),"results/NCoR1_SMRT_all_condition_vst.tsv",sep = "\t",quote = FALSE)
 #######################################################################################################
@@ -97,8 +99,20 @@ dds <- DESeq(dds)
 
 NCoR1.volcano.plot.list = list()
 NCoR1_DE.list = list()
+Emp_DE.list = list()
 
-# 0hr
+# Control 6hr CpG vs Uns (0hr)
+EC_vs_EU <- results(dds, contrast=c("group","Ctrl_6hr_CpG","Ctrl_0hr")) %>% as.data.frame() %>%  rownames_to_column('Gene')
+Emp_DE.list[[1]] = EC_vs_EU %>% filter(log2FoldChange >=1 & padj <= 0.05) %>% dplyr::select("Gene") %>% pull(.,"Gene")
+names(Emp_DE.list)[1]= "EC_vs_EU_up"
+Emp_DE.list[[2]] = EC_vs_EU %>% filter(log2FoldChange <=-1 & padj <= 0.05) %>% dplyr::select("Gene") %>% pull(.,"Gene")
+names(Emp_DE.list)[2]= "EC_vs_EU_down"
+write.table(EC_vs_EU, file="results/Emp_6hrCpG_vs_0hr_DE.tsv", sep = "\t",quote = FALSE,row.names = FALSE)
+volcano.plot(EC_vs_EU,"Control 6hr CpG vs 0hr")
+
+
+
++# 0hr
 NU_vs_EU <- results(dds, contrast=c("Conditon","NCoR1_Uns","Emp_Uns")) %>% as.data.frame() %>% rownames_to_column("Gene")
 NCoR1_DE.list[[1]] = NU_vs_EU %>% filter(log2FoldChange >=1 & padj <= 0.05) %>% dplyr::select("Gene") %>% pull(.,"Gene")
 names(NCoR1_DE.list)[1]= "NU_vs_EU_up"
