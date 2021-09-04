@@ -15,6 +15,7 @@ ncor_smrt.diff2 = ncor_smrt.diff %>% filter(NC_vs_NU_down ==0 & NC_vs_SC_down ==
 up_pp = diff_NCoR1.SMRT.annotation.df %>% 
         filter(SYMBOL %in% Emp_DE.list[[1]]) %>% 
         filter(distanceToTSS <= 1000 & distanceToTSS >=-1000) %>% 
+        dplyr::select(17,19) %>% unique() %>%
         dplyr::select(Clusters) %>% group_by(Clusters) %>% 
         dplyr::summarise(up_pp=n())
 
@@ -22,6 +23,7 @@ up_pp = diff_NCoR1.SMRT.annotation.df %>%
 down_pp = diff_NCoR1.SMRT.annotation.df %>% 
         filter(SYMBOL %in% Emp_DE.list[[2]]) %>% 
         filter(distanceToTSS <= 1000 & distanceToTSS >=-1000) %>% 
+        dplyr::select(17,19) %>% unique() %>%
         dplyr::select(Clusters) %>% group_by(Clusters) %>% 
         dplyr::summarise(down_pp=n()) 
 
@@ -29,6 +31,7 @@ down_pp = diff_NCoR1.SMRT.annotation.df %>%
 up_fd =  diff_NCoR1.SMRT.annotation.df %>% 
         filter(SYMBOL %in% Emp_DE.list[[1]]) %>% 
         filter(distanceToTSS > 1000 | distanceToTSS < -1000) %>% 
+        dplyr::select(17,19) %>% unique() %>%
         dplyr::select(Clusters) %>% group_by(Clusters) %>% 
         dplyr::summarise(up_fd=n())
 
@@ -36,6 +39,7 @@ up_fd =  diff_NCoR1.SMRT.annotation.df %>%
 down_fd = diff_NCoR1.SMRT.annotation.df %>% 
         filter(SYMBOL %in% Emp_DE.list[[2]]) %>% 
         filter(distanceToTSS > 1000 | distanceToTSS < -1000) %>% 
+        dplyr::select(17,19) %>% unique() %>%
         dplyr::select(Clusters) %>% group_by(Clusters) %>% 
         dplyr::summarise(down_fd=n())
 

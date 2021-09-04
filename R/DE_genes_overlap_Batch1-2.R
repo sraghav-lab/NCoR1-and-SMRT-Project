@@ -120,7 +120,8 @@ Rep2_Rep3_Rep5[[4]] = getMatrix(Rep2_Rep3.05,name="intersection") %>%
 pdf("Figures/SMRT_batch1-2_DE_RNASeq_comparison.pdf", height = 12, width = 15)
 do.call(gridExtra::grid.arrange,c(Rep2_Rep3_Rep5,ncol=2,nrow=2))
 
-# The number as inside the bar plot is not reversed due to code problem 
+# The number shown inside the bar plot is not correct as text in current 
+# ggplot2 code is not able to place the text in respective stacked bar plot
 SMRT_rep_comp
 dev.off()
 

@@ -1,4 +1,3 @@
-library(ChIPQC)
 ## Load sample data
 samples <- data.frame(SampleID=c("SMRT_0hr","SMRT_6hr_CpG"),
                       Replicate=c(1,1),
@@ -16,7 +15,9 @@ samples <- data.frame(SampleID=c("SMRT_0hr","SMRT_6hr_CpG"),
                       PeakCaller = c("bed", "bed"))
 
 ## Create ChIPQC object
-chipObj <- ChIPQC(samples, annotation="mm10",blacklist = "/home/imgsb/Gyan/mm10/mm10_blacklisted_region.bed",chromosomes = NULL) 
+chipObj <- ChIPQC(samples, annotation="mm10",
+                  blacklist = "/home/imgsb/Gyan/mm10/mm10_blacklisted_region.bed",
+                  chromosomes = NULL) 
 ## Create ChIPQC report
 #dir.create("results/ChIPQC")
 ChIPQCreport(chipObj, reportName="ChIP QC report: SMRT", reportFolder="results/ChIPQC/")
