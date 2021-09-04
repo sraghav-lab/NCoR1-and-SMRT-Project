@@ -1,9 +1,3 @@
-library(DESeq2)
-library(ggplot2)
-library(ggrepel)
-library(dplyr)
-library(tibble)
-
 # read raw count data from featureCount
 count <- read.csv("data/SMRT_all_condition_count.txt",sep = "\t",header = T,row.names = 1)
 head(count)
@@ -13,7 +7,7 @@ genotype <- factor(c(rep("WT",6),rep("KO",6)),levels = c("WT","KO"))
 coldata <- data.frame(row.names=colnames(count),condition,genotype)
 coldata$group<- paste0(coldata$condition,coldata$genotype)
 #design <- ~ condition + genotype + condition:genotype
-dds <- DESeqDataSetFromMatrix(countData=countdata, colData=coldata, design=~ group)
+dds <- DESeqDataSetFromMatrix(countData=count, colData=coldata, design=~ group)
 dds <- DESeq(dds)
 resultsNames(dds)
 
@@ -104,23 +98,23 @@ dev.off()
 volcano.plot = function(smrt,title){
   smrt <- smrt[which(smrt$log2FoldChange != "NA" & smrt$padj != "NA"),]
   smrt <- smrt %>% mutate(reg = case_when(
-                    smrt$log2FoldChange >= 1 & smrt$padj < 0.05 ~ "UP",
-                    smrt$log2FoldChange <= -1 & smrt$padj < 0.05 ~ "DOWN",
-                    abs(smrt$log2FoldChange) < 1 & smrt$padj >= 0.05 ~ "no_change",
-                    abs(smrt$log2FoldChange) < 1 & smrt$padj <= 0.05 ~ "no_change",
-                    abs(smrt$log2FoldChange) > 1 & smrt$padj >0.05 ~ "no_change")) %>%
+                    smrt$log2FoldChange >= 1 & smrt$padj < 0.01 ~ "UP",
+                    smrt$log2FoldChange <= -1 & smrt$padj < 0.01 ~ "DOWN",
+                    abs(smrt$log2FoldChange) < 1 & smrt$padj >= 0.01 ~ "no_change",
+                    abs(smrt$log2FoldChange) < 1 & smrt$padj <= 0.01 ~ "no_change",
+                    abs(smrt$log2FoldChange) > 1 & smrt$padj >0.01 ~ "no_change")) %>%
   mutate(reg = factor(reg, 
                       levels = c("UP", "no_change","DOWN")))
-  label <- c("Il10","Il27","Ido1","Ido2","Cd274","Ctla4","Il6","Il12b",
+  label <- c("Il10","Il27","Ido1","Ido2","Cd274","Ctla4","Il6","Il12b","Socs3",
            "Lag3", "Pparg", "Ifnb1", "Myd88", "Akt3", "Lag3","Cd83","Il12a","Ncor2")
 
   up = dim(smrt[which(smrt$reg =="UP"),])[1]
   down = dim(smrt[which(smrt$reg =="DOWN"),])[1]
   data= subset(smrt, Gene %in% label)
-  data= data[which(abs(data$log2FoldChange) >=1),]
+  data= data[which(abs(data$log2FoldChange) >=0.9),]
   data= data[which(abs(data$padj) <=0.05),]
   plt_smrt <- ggplot(smrt,aes(x=log2FoldChange,y=-log10(padj),label = Gene))+
-                geom_point(aes(color=reg))+
+                geom_point(aes(color=reg),size=0.1)+
                 #xlim(-10,10)+
                 #ylim(0,50)+
                 scale_color_manual(name = "Differential \n regulation",
