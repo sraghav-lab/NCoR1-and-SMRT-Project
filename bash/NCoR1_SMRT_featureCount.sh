@@ -15,7 +15,11 @@ featureCounts --verbose -p -B -T 20
           SMRT_CpG_2h_R3.srt.bam 
           SMRT_CpG_6h_R2.srt.bam 
           SMRT_CpG_6h_R3.srt.bam 
-          Emp_CpG_R2.srt.bam 
+          Emp_CpG_R2.srt.bam
+	  Emp_CpG_R1.srt.bam
           Emp_Uns_R2.srt.bam 
-          NCoR1_CpG_R2.srt.bam 
+	  Emp_Uns_R1.srt.bam
+          NCoR1_CpG_R2.srt.bam
+	  NCoR1_CpG_R1.srt.bam
           NCoR1_Uns_R2.srt.bam
+	  NCoR1_Uns_R1.srt.bam

@@ -12,7 +12,7 @@ SMRT_DE.bound.NestedList = getNestedList(SMRT_bound_DE,name="intersection")
 
 SMRT_DE.bound = getMatrix(SMRT_bound_DE,name="intersection") %>% 
                             as.data.frame() %>% 
-                           # rownames_to_column("Comp") %>% 
+                            #rownames_to_column("Comp") %>% 
                             melt() %>% .[c(3,4),]
 SMRT_DE.unbound = data.frame(variable= c("SMRT CpG 6hr","SMRT CpG 6hr"),
                                    value=c(lengths(SMRT_DE.list.5Rep[3])-SMRT_DE.bound[1,2],
@@ -74,13 +74,13 @@ dev.off()
 ##########################################################################################################################
 # List of direct targets of SMRT
 NCoR1.SMRT.annotation.df %>% 
-  filter(Clusters=="SMRT Uns") %>% 
-  filter(SYMBOL %in% SMRT_DE.list.5Rep[[1]]) %>% #dim()
+  dplyr::filter(Clusters=="SMRT Uns") %>% 
+  dplyr::filter(SYMBOL %in% SMRT_DE.list.5Rep[[1]]) %>% #dim() 
   write.table(.,file = "results/SMRT_bound_DE_up_genes_0hr.tsv",sep = "\t",quote = FALSE,row.names = FALSE)
 
 NCoR1.SMRT.annotation.df %>% 
   filter(Clusters=="SMRT Uns") %>% 
-  filter(SYMBOL %in% SMRT_DE.list.5Rep[[2]]) %>% 
+  filter(SYMBOL %in% SMRT_DE.list.5Rep[[2]]) %>% dim()
   write.table(.,file = "results/SMRT_bound_DE_down_genes_0hr.tsv",sep = "\t",quote = FALSE,row.names = FALSE)
 
 NCoR1.SMRT.annotation.df %>% 
@@ -93,7 +93,30 @@ NCoR1.SMRT.annotation.df %>%
   filter(SYMBOL %in% SMRT_DE.list.5Rep[[4]]) %>% #dim()
   write.table(.,file = "results/SMRT_bound_DE_down_genes_6hr.tsv",sep = "\t",quote = FALSE,row.names = FALSE)
 
-##########################################################################################################################  
+##########################################################################################################################
+# List of direct targets of NCoR1
+NCoR1.SMRT.annotation.df %>% 
+  dplyr::filter(Clusters=="NCoR1 Uns") %>% 
+  dplyr::filter(SYMBOL %in% NCoR1_DE.list[[1]]) %>% #dim() 
+  write.table(.,file = "results/NCoR1_bound_DE_up_genes_0hr.tsv",sep = "\t",quote = FALSE,row.names = FALSE)
+
+NCoR1.SMRT.annotation.df %>% 
+  filter(Clusters=="NCoR1 Uns") %>% 
+  filter(SYMBOL %in% NCoR1_DE.list[[2]]) %>% 
+write.table(.,file = "results/NCoR1_bound_DE_down_genes_0hr.tsv",sep = "\t",quote = FALSE,row.names = FALSE)
+
+NCoR1.SMRT.annotation.df %>% 
+  filter(Clusters=="NCoR1 CpG 6hr") %>% 
+  filter(SYMBOL %in% NCoR1_DE.list[[3]]) %>% 
+write.table(.,file = "results/NCoR1_bound_DE_up_genes_6hr.tsv",sep = "\t",quote = FALSE,row.names = FALSE)
+
+NCoR1.SMRT.annotation.df %>% 
+  filter(Clusters=="NCoR1 CpG 6hr") %>% 
+  filter(SYMBOL %in% NCoR1_DE.list[[4]]) %>% #dim()
+  write.table(.,file = "results/NCoR1_bound_DE_down_genes_6hr.tsv",sep = "\t",quote = FALSE,row.names = FALSE)
+
+##########################################################################################################################
+
 gene = lapply( SMRT_DE.list.5Rep[c(3,4)],function(i) bitr(i, fromType = "SYMBOL",
                                         toType = "ENTREZID",
                                         OrgDb = org.Mm.eg.db)$ENTREZID)

@@ -20,7 +20,7 @@ dev.off()
 files =  list.files(path = "/home/imgsb/Gyan/NCOR1/NCoR1_SMRT_analysis/tag_dir/peak_file/diff_peaks/","*_unique_peaks.bed.bed$",full.names = TRUE)
 files = files[c(4,1,3,2,7,5,6)]
 file_name =  list.files(path = "data","*_unique_peaks.bed$")
-file_name = gsub("_unique_peaks.bed","",file_name)
+file_name = gsub("_unique_peaks.bed","",basename(file_name))
 file_name = file_name[c(4,1,3,2,7,5,6)]
 names(files) = file_name
 
